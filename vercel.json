@@ -5,6 +5,7 @@
   "regions": ["sin1"],
   "installCommand": "npm ci",
   "buildCommand": "npm run build",
+  "outputDirectory": "public",
   "functions": {
     "api/index.php": {
       "runtime": "vercel-php@0.7.4"
