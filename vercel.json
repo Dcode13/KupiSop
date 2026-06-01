@@ -15,6 +15,7 @@
     { "src": "/build/(.*)", "dest": "/public/build/$1" },
     { "src": "/favicon.ico", "dest": "/public/favicon.ico" },
     { "src": "/robots.txt", "dest": "/public/robots.txt" },
+    { "src": "/livewire/(.*)", "dest": "/api/index.php" },
     { "src": "/(.*\\.(?:css|js|png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf|eot|map))", "dest": "/public/$1" },
     { "src": "/(.*)", "dest": "/api/index.php" }
   ]
