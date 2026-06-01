@@ -33,7 +33,7 @@
 <body>
     <div class="receipt">
         <div class="center">
-            <h1>☕ {{ config('app.name', 'Coffee Shop') }}</h1>
+            <h1>☕ {{ config('app.name', 'CodeCoffee') }}</h1>
             <p class="muted">Struk Pembayaran</p>
         </div>
         <hr>

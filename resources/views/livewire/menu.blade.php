@@ -4,7 +4,7 @@
         <div class="absolute rounded-full -top-20 -right-10 w-72 h-72 bg-white/10 blur-3xl"></div>
         <div class="relative max-w-6xl px-4 py-12 mx-auto sm:py-16">
             <p class="font-medium text-amber-200">Selamat datang di</p>
-            <h1 class="mt-1 text-3xl font-bold sm:text-4xl">{{ config('app.name', 'Coffee Shop') }} ☕</h1>
+            <h1 class="mt-1 text-3xl font-bold sm:text-4xl">{{ config('app.name', 'CodeCoffee') }} ☕</h1>
             <p class="max-w-lg mt-3 text-amber-100/90">Pilih menu favoritmu, atur pesanan, lalu pesan langsung dari mejamu. Pembayaran di kasir.</p>
 
             <div class="relative max-w-md mt-6">

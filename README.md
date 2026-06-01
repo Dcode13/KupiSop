@@ -1,6 +1,6 @@
-# ☕ Coffee Shop Management System (TALL Stack)
+# CodeCoffee Management System (TALL Stack)
 
-Aplikasi manajemen coffee shop internal: POS (kasir), manajemen menu & stok,
+Aplikasi manajemen CodeCoffee internal: POS (kasir), manajemen menu & stok,
 manajemen pesanan (barista), manajemen pengguna berbasis peran, dan laporan penjualan.
 
 **Stack:** Laravel 12 · Livewire 3 · Alpine.js · Tailwind CSS 3 · MySQL (XAMPP/MariaDB)

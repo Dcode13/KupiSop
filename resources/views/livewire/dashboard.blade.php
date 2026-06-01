@@ -3,7 +3,7 @@
 
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-stone-800">Selamat datang, {{ auth()->user()->name }} 👋</h1>
-        <p class="text-stone-500">Ringkasan aktivitas coffee shop hari ini.</p>
+        <p class="text-stone-500">Ringkasan aktivitas CodeCoffee hari ini.</p>
     </div>
 
     <!-- Stat cards -->

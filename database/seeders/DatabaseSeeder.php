@@ -82,7 +82,7 @@ class DatabaseSeeder extends Seeder
                         'category_id' => $category->id,
                         'price' => $product['price'],
                         'is_active' => true,
-                        'description' => $product['name'].' khas coffee shop kami.',
+                        'description' => $product['name'].' khas CodeCoffee.',
                     ]
                 );
 

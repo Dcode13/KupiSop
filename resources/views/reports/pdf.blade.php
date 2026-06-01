@@ -23,7 +23,7 @@
 
 <body>
     <div class="header">
-        <h1>☕ {{ config('app.name', 'Coffee Shop') }}</h1>
+        <h1>☕ {{ config('app.name', 'CodeCoffee') }}</h1>
         <div class="muted">Laporan Penjualan · {{ $from->format('d/m/Y') }} — {{ $to->format('d/m/Y') }}</div>
         <div class="muted">Dicetak: {{ now()->format('d/m/Y H:i') }}</div>
     </div>

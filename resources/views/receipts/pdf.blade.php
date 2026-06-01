@@ -19,7 +19,7 @@
 
 <body>
     <div class="center">
-        <h1>{{ config('app.name', 'Coffee Shop') }}</h1>
+        <h1>{{ config('app.name', 'CodeCoffee') }}</h1>
         <div class="muted">Struk Pembayaran</div>
     </div>
     <div class="dashed"></div>

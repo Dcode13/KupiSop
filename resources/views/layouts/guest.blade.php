@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Coffee Shop') }}</title>
+    <title>{{ config('app.name', 'CodeCoffee') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -26,11 +26,11 @@
 
             <div class="relative flex items-center gap-3">
                 <span class="flex items-center justify-center text-3xl rounded-2xl w-14 h-14 bg-white/15 backdrop-blur">☕</span>
-                <span class="text-2xl font-bold tracking-tight">{{ config('app.name', 'Coffee Shop') }}</span>
+                <span class="text-2xl font-bold tracking-tight">{{ config('app.name', 'CodeCoffee') }}</span>
             </div>
 
             <div class="relative">
-                <h1 class="text-4xl font-bold leading-tight">Kelola coffee shop<br>jadi lebih mudah.</h1>
+                <h1 class="text-4xl font-bold leading-tight">Kelola CodeCoffee<br>jadi lebih mudah.</h1>
                 <p class="max-w-md mt-4 text-amber-100/90">
                     Satu sistem untuk kasir, barista, dan owner — penjualan, stok bahan baku,
                     pesanan, hingga laporan, semua dalam satu tempat.
@@ -43,7 +43,7 @@
                 </ul>
             </div>
 
-            <p class="relative text-xs text-amber-200/70">© {{ date('Y') }} {{ config('app.name', 'Coffee Shop') }}. Untuk penggunaan internal.</p>
+            <p class="relative text-xs text-amber-200/70">© {{ date('Y') }} {{ config('app.name', 'CodeCoffee') }}. Untuk penggunaan internal.</p>
         </div>
 
         <!-- Panel form (kanan) -->
@@ -51,7 +51,7 @@
             <!-- logo untuk mobile -->
             <div class="flex items-center gap-2 mb-8 lg:hidden">
                 <span class="flex items-center justify-center text-2xl rounded-xl w-11 h-11 bg-amber-700 text-white">☕</span>
-                <span class="text-xl font-bold text-stone-800">{{ config('app.name', 'Coffee Shop') }}</span>
+                <span class="text-xl font-bold text-stone-800">{{ config('app.name', 'CodeCoffee') }}</span>
             </div>
 
             <div class="w-full max-w-md p-8 bg-white shadow-xl rounded-2xl shadow-stone-300/40">

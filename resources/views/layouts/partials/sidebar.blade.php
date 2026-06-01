@@ -11,7 +11,7 @@
 
     <div class="flex items-center gap-2 px-6 h-16 border-b border-stone-800">
         <span class="text-2xl">☕</span>
-        <span class="text-lg font-semibold text-white">{{ config('app.name', 'Coffee Shop') }}</span>
+        <span class="text-lg font-semibold text-white">{{ config('app.name', 'CodeCoffee') }}</span>
     </div>
 
     <nav class="px-3 py-4 space-y-1">
