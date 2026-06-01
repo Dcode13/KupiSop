@@ -16,14 +16,28 @@ $runtimeDefaults = [
     'VIEW_COMPILED_PATH' => '/tmp/views',
 ];
 
-if (! getenv('MYSQL_ATTR_SSL_CA') && is_file('/etc/ssl/certs/ca-certificates.crt')) {
-    $runtimeDefaults['MYSQL_ATTR_SSL_CA'] = '/etc/ssl/certs/ca-certificates.crt';
-}
+$sslCaCandidates = [
+    __DIR__.'/../certs/isrgrootx1.pem',
+    getenv('MYSQL_ATTR_SSL_CA') ?: null,
+    '/etc/ssl/certs/ca-certificates.crt',
+    '/etc/pki/tls/certs/ca-bundle.crt',
+    '/etc/ssl/cert.pem',
+    '/etc/ssl/ca-bundle.pem',
+];
 
 foreach ($forcedRuntime as $key => $value) {
     putenv($key.'='.$value);
     $_ENV[$key] = $value;
     $_SERVER[$key] = $value;
+}
+
+foreach ($sslCaCandidates as $candidate) {
+    if ($candidate && is_file($candidate)) {
+        putenv('MYSQL_ATTR_SSL_CA='.$candidate);
+        $_ENV['MYSQL_ATTR_SSL_CA'] = $candidate;
+        $_SERVER['MYSQL_ATTR_SSL_CA'] = $candidate;
+        break;
+    }
 }
 
 foreach ($runtimeDefaults as $key => $value) {
