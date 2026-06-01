@@ -105,17 +105,58 @@
 
                 <div>
                     <label class="block mb-1 text-sm font-medium text-stone-600">Foto Produk</label>
-                    <input type="file" wire:model="image" accept="image/*"
+                    <div x-data="{ preview: '', error: '', loading: false }">
+                    <input type="file" accept="image/jpeg,image/png,image/webp,image/gif"
+                        x-on:change="
+                            error = '';
+                            loading = false;
+                            const file = $event.target.files[0];
+
+                            if (! file) {
+                                preview = '';
+                                $wire.set('imageData', '');
+                                return;
+                            }
+
+                            const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+                            if (! allowed.includes(file.type)) {
+                                error = 'Format gambar harus JPG, PNG, WebP, atau GIF.';
+                                $event.target.value = '';
+                                return;
+                            }
+
+                            if (file.size > 2 * 1024 * 1024) {
+                                error = 'Ukuran gambar maksimal 2 MB.';
+                                $event.target.value = '';
+                                return;
+                            }
+
+                            loading = true;
+                                const reader = new FileReader();
+                                reader.onload = () => {
+                                    preview = reader.result;
+                                    Promise.resolve($wire.set('imageData', reader.result))
+                                        .finally(() => loading = false);
+                                };
+                            reader.onerror = () => {
+                                error = 'Gambar gagal dibaca.';
+                                loading = false;
+                                $event.target.value = '';
+                            };
+                            reader.readAsDataURL(file);
+                        "
                         class="w-full text-sm text-stone-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-amber-100 file:text-amber-700 hover:file:bg-amber-200">
-                    <div wire:loading wire:target="image" class="mt-1 text-xs text-stone-400">Mengunggah…</div>
-                    @error('image') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <div x-show="loading" class="mt-1 text-xs text-stone-400">Menyiapkan gambar...</div>
+                    <div x-show="error" x-text="error" class="mt-1 text-xs text-red-600"></div>
+                    @error('imageData') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
 
                     <div class="mt-2">
-                        @if ($image)
-                            <img src="{{ $image->temporaryUrl() }}" class="object-cover w-20 h-20 rounded-lg">
-                        @elseif ($existingImage)
-                            <img src="{{ Storage::url($existingImage) }}" class="object-cover w-20 h-20 rounded-lg">
+                        <img x-show="preview" x-bind:src="preview" class="object-cover w-20 h-20 rounded-lg">
+
+                        @if ($existingImage)
+                            <img x-show="! preview" src="{{ \App\Models\Product::resolveImageUrl($existingImage) }}" class="object-cover w-20 h-20 rounded-lg">
                         @endif
+                    </div>
                     </div>
                 </div>
 
@@ -127,7 +168,7 @@
                 <div class="flex justify-end gap-2 pt-2">
                     <button type="button" wire:click="$set('showModal', false)"
                         class="px-4 py-2 text-sm rounded-lg text-stone-600 bg-stone-100 hover:bg-stone-200">Batal</button>
-                    <button type="submit" wire:loading.attr="disabled" wire:target="save,image"
+                    <button type="submit" wire:loading.attr="disabled" wire:target="save"
                         class="px-4 py-2 text-sm font-medium text-white rounded-lg bg-amber-700 hover:bg-amber-800 disabled:opacity-50">
                         Simpan
                     </button>

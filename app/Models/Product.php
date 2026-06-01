@@ -55,8 +55,19 @@ class Product extends Model
      */
     public function imageUrl(): string
     {
-        return $this->image
-            ? Storage::url($this->image)
-            : 'https://placehold.co/300x300?text=No+Image';
+        return self::resolveImageUrl($this->image);
+    }
+
+    public static function resolveImageUrl(?string $image): string
+    {
+        if (! $image) {
+            return 'https://placehold.co/300x300?text=No+Image';
+        }
+
+        if (str_starts_with($image, 'data:image/') || str_starts_with($image, 'http://') || str_starts_with($image, 'https://')) {
+            return $image;
+        }
+
+        return Storage::url($image);
     }
 }

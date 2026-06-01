@@ -5,18 +5,18 @@ namespace App\Livewire\Products;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
-use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
 #[Layout('layouts.app')]
 #[Title('Produk')]
 class Index extends Component
 {
-    use WithFileUploads, WithPagination;
+    use WithPagination;
 
     #[Url(as: 'q')]
     public string $search = '';
@@ -33,7 +33,7 @@ class Index extends Component
     public $price = '';
     public string $description = '';
     public bool $is_active = true;
-    public $image;          // file upload baru
+    public string $imageData = '';
     public ?string $existingImage = null;
 
     protected function rules(): array
@@ -44,7 +44,7 @@ class Index extends Component
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
             'is_active' => 'boolean',
-            'image' => 'nullable|image|max:2048', // maks 2MB
+            'imageData' => 'nullable|string',
         ];
     }
 
@@ -60,7 +60,7 @@ class Index extends Component
 
     public function create(): void
     {
-        $this->reset(['editingId', 'name', 'category_id', 'price', 'description', 'image', 'existingImage']);
+        $this->reset(['editingId', 'name', 'category_id', 'price', 'description', 'imageData', 'existingImage']);
         $this->is_active = true;
         $this->resetValidation();
         $this->showModal = true;
@@ -75,7 +75,7 @@ class Index extends Component
         $this->description = $product->description ?? '';
         $this->is_active = $product->is_active;
         $this->existingImage = $product->image;
-        $this->image = null;
+        $this->imageData = '';
         $this->resetValidation();
         $this->showModal = true;
     }
@@ -83,6 +83,7 @@ class Index extends Component
     public function save(): void
     {
         $this->validate();
+        $this->validateImageData();
 
         $data = [
             'name' => $this->name,
@@ -92,19 +93,16 @@ class Index extends Component
             'is_active' => $this->is_active,
         ];
 
-        // Upload gambar baru -> simpan ke storage/app/public/products
-        if ($this->image) {
-            if ($this->existingImage) {
-                Storage::disk('public')->delete($this->existingImage);
-            }
-            $data['image'] = $this->image->store('products', 'public');
+        if ($this->imageData !== '') {
+            $this->deleteStoredImage($this->existingImage);
+            $data['image'] = $this->imageData;
         }
 
         Product::updateOrCreate(['id' => $this->editingId], $data);
 
         $this->showModal = false;
         $this->dispatch('notify', message: $this->editingId ? 'Produk diperbarui.' : 'Produk ditambahkan.');
-        $this->reset(['editingId', 'name', 'category_id', 'price', 'description', 'image', 'existingImage']);
+        $this->reset(['editingId', 'name', 'category_id', 'price', 'description', 'imageData', 'existingImage']);
     }
 
     public function toggleActive(Product $product): void
@@ -115,11 +113,46 @@ class Index extends Component
 
     public function delete(Product $product): void
     {
-        if ($product->image) {
-            Storage::disk('public')->delete($product->image);
-        }
+        $this->deleteStoredImage($product->image);
         $product->delete();
         $this->dispatch('notify', message: 'Produk dihapus.');
+    }
+
+    private function validateImageData(): void
+    {
+        if ($this->imageData === '') {
+            return;
+        }
+
+        if (! preg_match('/^data:image\/(jpeg|png|webp|gif);base64,/', $this->imageData)) {
+            throw ValidationException::withMessages([
+                'imageData' => 'Foto produk harus berupa gambar JPG, PNG, WebP, atau GIF.',
+            ]);
+        }
+
+        $encoded = substr($this->imageData, strpos($this->imageData, ',') + 1);
+        $binary = base64_decode($encoded, true);
+
+        if ($binary === false || @getimagesizefromstring($binary) === false) {
+            throw ValidationException::withMessages([
+                'imageData' => 'Foto produk tidak valid.',
+            ]);
+        }
+
+        if (strlen($binary) > 2 * 1024 * 1024) {
+            throw ValidationException::withMessages([
+                'imageData' => 'Ukuran foto produk maksimal 2 MB.',
+            ]);
+        }
+    }
+
+    private function deleteStoredImage(?string $image): void
+    {
+        if (! $image || str_starts_with($image, 'data:image/') || str_starts_with($image, 'http://') || str_starts_with($image, 'https://')) {
+            return;
+        }
+
+        Storage::disk('public')->delete($image);
     }
 
     public function render()
