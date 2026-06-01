@@ -15,6 +15,8 @@ return [
 
     'default' => env('FILESYSTEM_DISK', 'local'),
 
+    'product_image_disk' => env('PRODUCT_IMAGE_DISK', 'public'),
+
     /*
     |--------------------------------------------------------------------------
     | Filesystem Disks
@@ -57,6 +59,19 @@ return [
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => false,
+            'report' => false,
+        ],
+
+        'supabase' => [
+            'driver' => 's3',
+            'key' => env('SUPABASE_STORAGE_ACCESS_KEY_ID', env('AWS_ACCESS_KEY_ID')),
+            'secret' => env('SUPABASE_STORAGE_SECRET_ACCESS_KEY', env('AWS_SECRET_ACCESS_KEY')),
+            'region' => env('SUPABASE_STORAGE_REGION', env('AWS_DEFAULT_REGION')),
+            'bucket' => env('SUPABASE_STORAGE_BUCKET', env('AWS_BUCKET')),
+            'url' => env('SUPABASE_STORAGE_PUBLIC_URL', env('AWS_URL')),
+            'endpoint' => env('SUPABASE_STORAGE_ENDPOINT', env('AWS_ENDPOINT')),
+            'use_path_style_endpoint' => env('SUPABASE_STORAGE_USE_PATH_STYLE_ENDPOINT', true),
+            'throw' => true,
             'report' => false,
         ],
 

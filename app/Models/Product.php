@@ -58,6 +58,11 @@ class Product extends Model
         return self::resolveImageUrl($this->image);
     }
 
+    public static function imageDisk(): string
+    {
+        return config('filesystems.product_image_disk', 'public');
+    }
+
     public static function resolveImageUrl(?string $image): string
     {
         if (! $image) {
@@ -68,6 +73,13 @@ class Product extends Model
             return $image;
         }
 
-        return Storage::url($image);
+        $disk = self::imageDisk();
+        $baseUrl = config("filesystems.disks.{$disk}.url");
+
+        if ($baseUrl) {
+            return rtrim($baseUrl, '/').'/'.ltrim($image, '/');
+        }
+
+        return Storage::disk($disk)->url($image);
     }
 }

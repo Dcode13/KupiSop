@@ -5,6 +5,7 @@ namespace App\Livewire\Products;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -83,7 +84,7 @@ class Index extends Component
     public function save(): void
     {
         $this->validate();
-        $this->validateImageData();
+        $imageUpload = $this->decodeImageData();
 
         $data = [
             'name' => $this->name,
@@ -95,7 +96,11 @@ class Index extends Component
 
         if ($this->imageData !== '') {
             $this->deleteStoredImage($this->existingImage);
-            $data['image'] = $this->imageData;
+            $data['image'] = $this->storeImage(
+                $imageUpload['contents'],
+                $imageUpload['extension'],
+                $imageUpload['mime']
+            );
         }
 
         Product::updateOrCreate(['id' => $this->editingId], $data);
@@ -118,13 +123,13 @@ class Index extends Component
         $this->dispatch('notify', message: 'Produk dihapus.');
     }
 
-    private function validateImageData(): void
+    private function decodeImageData(): ?array
     {
         if ($this->imageData === '') {
-            return;
+            return null;
         }
 
-        if (! preg_match('/^data:image\/(jpeg|png|webp|gif);base64,/', $this->imageData)) {
+        if (! preg_match('/^data:image\/(jpeg|png|webp|gif);base64,/', $this->imageData, $matches)) {
             throw ValidationException::withMessages([
                 'imageData' => 'Foto produk harus berupa gambar JPG, PNG, WebP, atau GIF.',
             ]);
@@ -144,6 +149,29 @@ class Index extends Component
                 'imageData' => 'Ukuran foto produk maksimal 2 MB.',
             ]);
         }
+
+        return [
+            'contents' => $binary,
+            'extension' => $matches[1] === 'jpeg' ? 'jpg' : $matches[1],
+            'mime' => 'image/'.$matches[1],
+        ];
+    }
+
+    private function storeImage(string $contents, string $extension, string $mime): string
+    {
+        $path = 'products/'.now()->format('Y/m').'/'.Str::uuid().'.'.$extension;
+
+        $stored = Storage::disk($this->imageDisk())->put($path, $contents, [
+            'ContentType' => $mime,
+        ]);
+
+        if (! $stored) {
+            throw ValidationException::withMessages([
+                'imageData' => 'Foto produk gagal disimpan ke Supabase Storage.',
+            ]);
+        }
+
+        return $path;
     }
 
     private function deleteStoredImage(?string $image): void
@@ -152,7 +180,12 @@ class Index extends Component
             return;
         }
 
-        Storage::disk('public')->delete($image);
+        Storage::disk($this->imageDisk())->delete($image);
+    }
+
+    private function imageDisk(): string
+    {
+        return Product::imageDisk();
     }
 
     public function render()
