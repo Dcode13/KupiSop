@@ -26,19 +26,19 @@ class DatabaseSeeder extends Seeder
         // 2. Default users (satu per role)
         $admin = User::firstOrCreate(
             ['email' => 'admin@coffee.test'],
-            ['name' => 'Administrator', 'password' => Hash::make('password')]
+            ['name' => 'Administrator', 'password' => Hash::make('adminkupisop')]
         );
         $admin->syncRoles('admin');
 
         $kasir = User::firstOrCreate(
             ['email' => 'kasir@coffee.test'],
-            ['name' => 'Kasir Satu', 'password' => Hash::make('password')]
+            ['name' => 'Kasir Satu', 'password' => Hash::make('kasirkupisop')]
         );
         $kasir->syncRoles('kasir');
 
         $barista = User::firstOrCreate(
             ['email' => 'barista@coffee.test'],
-            ['name' => 'Barista Satu', 'password' => Hash::make('password')]
+            ['name' => 'Barista Satu', 'password' => Hash::make('baristakupisop')]
         );
         $barista->syncRoles('barista');
 

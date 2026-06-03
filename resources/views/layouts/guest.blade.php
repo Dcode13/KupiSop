@@ -24,9 +24,19 @@
             <div class="absolute rounded-full -top-24 -right-24 w-80 h-80 bg-white/10 blur-2xl"></div>
             <div class="absolute rounded-full -bottom-32 -left-20 w-96 h-96 bg-amber-500/20 blur-3xl"></div>
 
-            <div class="relative flex items-center gap-3">
-                <span class="flex items-center justify-center text-3xl rounded-2xl w-14 h-14 bg-white/15 backdrop-blur">☕</span>
-                <span class="text-2xl font-bold tracking-tight">{{ config('app.name', 'CodeCoffee') }}</span>
+            <div class="relative">
+                <a href="{{ route('menu') }}" wire:navigate
+                    class="inline-flex items-center gap-1.5 mb-10 text-sm font-medium transition text-amber-100/80 hover:text-white">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Kembali ke Menu
+                </a>
+
+                <div class="flex items-center gap-3">
+                    <span class="flex items-center justify-center text-3xl rounded-2xl w-14 h-14 bg-white/15 backdrop-blur">☕</span>
+                    <span class="text-2xl font-bold tracking-tight">{{ config('app.name', 'CodeCoffee') }}</span>
+                </div>
             </div>
 
             <div class="relative">
@@ -48,6 +58,15 @@
 
         <!-- Panel form (kanan) -->
         <div class="flex flex-col items-center justify-center p-6 bg-stone-100 sm:p-12">
+            <!-- tombol kembali untuk mobile (panel branding tersembunyi di layar kecil) -->
+            <a href="{{ route('menu') }}" wire:navigate
+                class="inline-flex items-center self-start gap-1.5 mb-6 text-sm font-medium transition text-stone-500 hover:text-amber-700 lg:hidden">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Kembali ke Menu
+            </a>
+
             <!-- logo untuk mobile -->
             <div class="flex items-center gap-2 mb-8 lg:hidden">
                 <span class="flex items-center justify-center text-2xl rounded-xl w-11 h-11 bg-amber-700 text-white">☕</span>

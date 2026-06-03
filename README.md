@@ -63,9 +63,9 @@ Akun ini dibuat oleh `php artisan migrate --seed`.
 
 | Role | Email | Password |
 | --- | --- | --- |
-| Admin | `admin@coffee.test` | `password` |
-| Kasir | `kasir@coffee.test` | `password` |
-| Barista | `barista@coffee.test` | `password` |
+| Admin | `admin@coffee.test` | `adminkupisop` |
+| Kasir | `kasir@coffee.test` | `kasirkupisop` |
+| Barista | `barista@coffee.test` | `baristakupisop` |
 
 Ubah password default setelah aplikasi dipakai untuk production.
 

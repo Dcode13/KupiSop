@@ -24,12 +24,20 @@ new #[Layout('layouts.guest')] class extends Component
     }
 
     /**
-     * Isi cepat kredensial demo (untuk kemudahan pengujian).
+     * Isi cepat kredensial demo (hanya untuk development lokal).
      */
-    public function fillDemo(string $email): void
+    public function fillDemo(string $role): void
     {
+        $accounts = [
+            'admin' => ['admin@coffee.test', 'adminkupisop'],
+            'kasir' => ['kasir@coffee.test', 'kasirkupisop'],
+            'barista' => ['barista@coffee.test', 'baristakupisop'],
+        ];
+
+        [$email, $password] = $accounts[$role] ?? $accounts['admin'];
+
         $this->form->email = $email;
-        $this->form->password = 'password';
+        $this->form->password = $password;
     }
 }; ?>
 
@@ -102,22 +110,24 @@ new #[Layout('layouts.guest')] class extends Component
         </button>
     </form>
 
-    <!-- Akun demo -->
-    <div class="pt-5 mt-6 border-t border-stone-100">
-        <p class="mb-2 text-xs font-medium text-center text-stone-400">Coba akun demo (password: <span class="font-semibold">password</span>)</p>
-        <div class="grid grid-cols-3 gap-2">
-            <button wire:click="fillDemo('admin@coffee.test')" type="button"
-                class="px-2 py-2 text-xs font-medium transition border rounded-lg border-stone-200 text-stone-600 hover:border-amber-300 hover:bg-amber-50">
-                👑 Admin
-            </button>
-            <button wire:click="fillDemo('kasir@coffee.test')" type="button"
-                class="px-2 py-2 text-xs font-medium transition border rounded-lg border-stone-200 text-stone-600 hover:border-amber-300 hover:bg-amber-50">
-                🛒 Kasir
-            </button>
-            <button wire:click="fillDemo('barista@coffee.test')" type="button"
-                class="px-2 py-2 text-xs font-medium transition border rounded-lg border-stone-200 text-stone-600 hover:border-amber-300 hover:bg-amber-50">
-                ☕ Barista
-            </button>
+    <!-- Akun demo: hanya tampil saat development lokal (disembunyikan di production demi keamanan) -->
+    @if (app()->environment('local'))
+        <div class="pt-5 mt-6 border-t border-stone-100">
+            <p class="mb-2 text-xs font-medium text-center text-stone-400">Isi cepat akun demo (lokal)</p>
+            <div class="grid grid-cols-3 gap-2">
+                <button wire:click="fillDemo('admin')" type="button"
+                    class="px-2 py-2 text-xs font-medium transition border rounded-lg border-stone-200 text-stone-600 hover:border-amber-300 hover:bg-amber-50">
+                    👑 Admin
+                </button>
+                <button wire:click="fillDemo('kasir')" type="button"
+                    class="px-2 py-2 text-xs font-medium transition border rounded-lg border-stone-200 text-stone-600 hover:border-amber-300 hover:bg-amber-50">
+                    🛒 Kasir
+                </button>
+                <button wire:click="fillDemo('barista')" type="button"
+                    class="px-2 py-2 text-xs font-medium transition border rounded-lg border-stone-200 text-stone-600 hover:border-amber-300 hover:bg-amber-50">
+                    ☕ Barista
+                </button>
+            </div>
         </div>
-    </div>
+    @endif
 </div>
